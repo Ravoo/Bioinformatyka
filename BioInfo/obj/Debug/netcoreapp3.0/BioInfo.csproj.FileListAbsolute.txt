@@ -1,0 +1,13 @@
+D:\Projekty\C#\BioInfo\BioInfo\bin\Debug\netcoreapp3.0\BioInfo.exe
+D:\Projekty\C#\BioInfo\BioInfo\bin\Debug\netcoreapp3.0\BioInfo.deps.json
+D:\Projekty\C#\BioInfo\BioInfo\bin\Debug\netcoreapp3.0\BioInfo.runtimeconfig.json
+D:\Projekty\C#\BioInfo\BioInfo\bin\Debug\netcoreapp3.0\BioInfo.runtimeconfig.dev.json
+D:\Projekty\C#\BioInfo\BioInfo\bin\Debug\netcoreapp3.0\BioInfo.dll
+D:\Projekty\C#\BioInfo\BioInfo\bin\Debug\netcoreapp3.0\BioInfo.pdb
+D:\Projekty\C#\BioInfo\BioInfo\obj\Debug\netcoreapp3.0\BioInfo.csprojAssemblyReference.cache
+D:\Projekty\C#\BioInfo\BioInfo\obj\Debug\netcoreapp3.0\BioInfo.AssemblyInfoInputs.cache
+D:\Projekty\C#\BioInfo\BioInfo\obj\Debug\netcoreapp3.0\BioInfo.AssemblyInfo.cs
+D:\Projekty\C#\BioInfo\BioInfo\obj\Debug\netcoreapp3.0\BioInfo.dll
+D:\Projekty\C#\BioInfo\BioInfo\obj\Debug\netcoreapp3.0\BioInfo.pdb
+D:\Projekty\C#\BioInfo\BioInfo\bin\Debug\netcoreapp3.0\SimMatrix.txt
+D:\Projekty\C#\BioInfo\BioInfo\bin\Debug\netcoreapp3.0\DistMatrix.txt

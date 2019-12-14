@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Ravo\.Rider2019.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Ravo\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_BioInfo.1047187900.00" t="ExcludeRecursive" />
+    <e p="D:\Projekty\C#\BioInfo" t="IncludeFlat">
+      <e p="BioInfo" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="BioInfo.csproj" t="IncludeRecursive" />
+        <e p="DistMatrix.txt" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.0" t="Include">
+              <e p="BioInfo.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="SimMatrix.txt" t="Include" />
+      </e>
+      <e p="BioInfo.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
