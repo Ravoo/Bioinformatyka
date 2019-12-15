@@ -19,14 +19,19 @@ namespace BioInfo
             return acids.ToString();
         }
 
-        public static string GetRNA(string acids)
+        public static string GetRNA(string acids, string rnaOriginal)
         {
-            var rna = new StringBuilder();
+            var threes = ChunkIntoThrees(rnaOriginal).ToList();
+            var rnaNew = new StringBuilder();
 
-            foreach (var acid in acids) 
-                rna.Append(AcidToRNA[acid.ToString()]);
+            foreach (var acid in acids)
+            {
+                var matchingCodons = AcidToRNA[acid.ToString()];
+                var matchedThree = threes.First(matchingCodons.Contains);
+                threes.Remove(matchedThree);
+            }
 
-            return rna.ToString();
+            return rnaNew.ToString();
         }
 
         private static IEnumerable<string> ChunkIntoThrees(string rna) =>
@@ -95,67 +100,34 @@ namespace BioInfo
             {"GGC", "G"},
             {"GGA", "G"},
             {"GGG", "G"},
+            {"AAA", "K" },
+            {"AAG", "K" },
+            {"AAU", "N" },
+            {"AAC", "N" }
         };
 
-        public static Dictionary<string, string> AcidToRNA = new Dictionary<string, string>
+        public static Dictionary<string, List<string>> AcidToRNA = new Dictionary<string, List<string>>
         {
-            {"F", "UUU"},
-            {"F", "UUC"},
-            {"L", "UUA"},
-            {"L", "UUG"},
-            {"S", "UCU"},
-            {"S", "UCC"},
-            {"S", "UCA"},
-            {"S", "UCG"},
-            {"Y", "UAU"},
-            {"Y", "UAC"},
-            {"C", "UGU"},
-            {"C", "UGC"},
-            {"W", "UGG"},
-            {"L", "CUU"},
-            {"L", "CUC"},
-            {"L", "CUA"},
-            {"L", "CUG"},
-            {"I", "AUU"},
-            {"I", "AUC"},
-            {"I", "AUA"},
-            {"M", "AUG"},
-            {"V", "GUU"},
-            {"V", "GUC"},
-            {"V", "GUA"},
-            {"V", "GUG"},
-            {"P", "CCU"},
-            {"P", "CCC"},
-            {"P", "CCA"},
-            {"P", "CCG"},
-            {"H", "CAU"},
-            {"H", "CAC"},
-            {"Q", "CAA"},
-            {"Q", "CAG"},
-            {"R", "CGU"},
-            {"R", "CGC"},
-            {"R", "CGA"},
-            {"R", "CGG"},
-            {"T", "ACU"},
-            {"T", "ACC"},
-            {"T", "ACA"},
-            {"T", "ACG"},
-            {"S", "AGU"},
-            {"S", "AGC"},
-            {"R", "AGA"},
-            {"R", "AGG"},
-            {"A", "GCU"},
-            {"A", "GCC"},
-            {"A", "GCA"},
-            {"A", "GCG"},
-            {"D", "GAU"},
-            {"D", "GAC"},
-            {"E", "GAA"},
-            {"E", "GAG"},
-            {"G", "GGU"},
-            {"G", "GGC"},
-            {"G", "GGA"},
-            {"G", "GGG"},
+            {"F", new List<string>{"UUU", "UUC"}},
+            {"L", new List<string>{ "UUA", "UUG", "CUU", "CUC", "CUA", "CUG"}},
+            {"S", new List<string>{ "UCU", "UCU", "UCA", "UCG", "AGU", "AGC"}},
+            {"Y", new List<string>{ "UAU", "UAC"}},
+            {"C", new List<string>{ "UGU", "UGC"}},
+            {"I", new List<string>{ "AUU", "AUC", "AUA"}},
+            {"W", new List<string>{ "UGG"}},
+            {"M", new List<string>{ "AUG"}},
+            {"V", new List<string>{ "GUU", "GUC", "GUA", "GUG"}},
+            {"P", new List<string>{ "CCU", "CCC", "CCA", "CCG"}},
+            {"H", new List<string>{ "CAU", "CAC"}},
+            {"Q", new List<string>{ "CAA", "CAG"}},
+            {"R", new List<string>{ "CGU", "CGC", "CGA", "CGG", "AGA", "AGG"}},
+            {"T", new List<string>{ "ACU", "ACC", "ACA", "ACG"}},
+            {"A", new List<string>{ "GCU", "GCC", "GCA", "GCG"}},
+            {"D", new List<string>{ "GAU", "GAC"}},
+            {"E", new List<string>{ "GAA", "GAG"}},
+            {"G", new List<string>{ "GGU", "GGC", "GGA", "GGG"}},
+            {"K", new List<string>{ "AAA", "AAG"}},
+            {"N", new List<string>{ "AAU", "AAC"}},
         };
     }
 }

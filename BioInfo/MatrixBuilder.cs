@@ -5,12 +5,19 @@ namespace BioInfo
     public class MatrixBuilder
     {
         public static (double result, double[,] d) GlobalForSimilarity(string u, string w, double[,] matrix)
-            => CalculateMeasure(u, w, matrix, Math.Max);
+            => CalculateMeasure(u, w, matrix, Math.Max, GetValue);
 
         public static (double result, double[,] d) GlobalForDistance(string u, string w, double[,] matrix)
-            => CalculateMeasure(u, w, matrix, Math.Min);
+            => CalculateMeasure(u, w, matrix, Math.Min, GetValue);
 
-        private static (double result, double[,] d) CalculateMeasure(string u, string w, double[,] matrix, Func<double, double, double> optimizationFunction) //optimizationFunction - Math.Min lub Math.Max w zależności czy distance czy similarity
+        public static (double result, double[,] d) GlobalForDistanceRNA(string u, string w, double[,] matrix)
+            => CalculateMeasure(u, w, matrix, Math.Min, GetValueForAcids);
+
+        public static (double result, double[,] d) GlobalForSimilarityRNA(string u, string w, double[,] matrix)
+            => CalculateMeasure(u, w, matrix, Math.Max, GetValueForAcids);
+
+        private static (double result, double[,] d) CalculateMeasure(string u, string w, double[,] matrix, 
+            Func<double, double, double> optimizationFunction, Func<double[,], char, char, double> getValue)
         {
             int m, n;
             double[,] d;
@@ -23,26 +30,28 @@ namespace BioInfo
             double prev = 0;
             for (var j = 1; j <= m; j++)
             {
-                d[0, j] = prev + GetValue(matrix, u[j - 1], '-');
-                prev += GetValue(matrix, u[j - 1], '-');
+                d[0, j] = prev + getValue(matrix, u[j - 1], '-');
+                prev += getValue(matrix, u[j - 1], '-');
             }
 
             prev = 0;
             for (var i = 1; i <= n; i++)
             {
-                d[i, 0] = prev + GetValue(matrix, '-', w[i - 1]);
-                prev += GetValue(matrix, '-', w[i - 1]);
+                d[i, 0] = prev + getValue(matrix, '-', w[i - 1]);
+                prev += getValue(matrix, '-', w[i - 1]);
             }
 
             for (var i = 1; i <= n; i++)
                 for (var j = 1; j <= m; j++)
                 {
-                    var case1 = d[i - 1, j - 1] + GetValue(matrix, u[j - 1], w[i - 1]);
-                    var case2 = d[i, j - 1] + GetValue(matrix, u[j - 1], '-');
-                    var case3 = d[i - 1, j] + GetValue(matrix, '-', w[i - 1]);
+                    var case1 = d[i - 1, j - 1] + getValue(matrix, u[j - 1], w[i - 1]);
+                    var case2 = d[i, j - 1] + getValue(matrix, u[j - 1], '-');
+                    var case3 = d[i - 1, j] + getValue(matrix, '-', w[i - 1]);
 
                     d[i, j] = optimizationFunction(case1, optimizationFunction(case2, case3));
                 }
+
+
 
             return (d[n, m], d);
         }
@@ -117,7 +126,7 @@ namespace BioInfo
                 'M' => 12,
                 'F' => 13,
                 'P' => 14,
-                'U' => 15,
+                'N' => 15,
                 'S' => 16,
                 'T' => 17,
                 'W' => 18,
@@ -141,7 +150,7 @@ namespace BioInfo
                 'M' => 12,
                 'F' => 13,
                 'P' => 14,
-                'U' => 15,
+                'N' => 15,
                 'S' => 16,
                 'T' => 17,
                 'W' => 18,

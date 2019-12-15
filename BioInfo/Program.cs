@@ -8,33 +8,56 @@ namespace BioInfo
     {
         static void Main(string[] args)
         {
-            var lines = File.ReadAllLines("SimMatrix.txt", Encoding.UTF8);
+            var lines = File.ReadAllLines("RNADistMatrix.txt", Encoding.UTF8);
             var measureType = lines[0];
 
-            if (measureType == "r")
-                RNAMode(lines);
+            if (measureType == "rd" || measureType == "rs")
+                RNAMode(measureType, lines);
             else
                 StandardMode(measureType, lines);
         }
 
-        public static void RNAMode(string[] lines)
+        public static void RNAMode(string measureType, string[] lines)
         {
             var uRNA = lines[1];
             var wRNA = lines[2];
-            // rzucic wyjatek jesli nie sa podzielne przez 3?
+            if (uRNA.Length % 3 != 0 || wRNA.Length % 3 != 0)
+            {
+                Console.WriteLine("Sekwencje RNA muszą byc podzielne przez 3.");
+                return;
+            }
+
             var matrix = new double[21, 21];
 
             for (var i = 3; i < lines.Length; i++)
             {
                 var line = lines[i].Split(',');
-                for (var j = 0; j < 5; j++)
+                for (var j = 0; j < 21; j++)
                     matrix[i - 3, j] = double.Parse(line[j]);
             }
 
             var u = RNAToAcidsMapper.GetAcids(uRNA);
             var w = RNAToAcidsMapper.GetAcids(wRNA);
 
-
+            if (measureType == "rd")
+            {
+                var (measure, d) = MatrixBuilder.GlobalForDistanceRNA(u, w, matrix);
+                var optimalGlobalAlignment = GlobalAlignment.OptimalWithDistance(d, u, w);
+                var newRnaU = RNAToAcidsMapper.GetRNA(optimalGlobalAlignment.uResult, uRNA);
+                var newRnaW = RNAToAcidsMapper.GetRNA(optimalGlobalAlignment.wResult, wRNA);
+                Console.WriteLine("\nGlobal");
+                Console.WriteLine(measure);
+                Console.WriteLine(optimalGlobalAlignment.uResult + " " + optimalGlobalAlignment.wResult);
+                Console.WriteLine(newRnaU + " " + newRnaW);
+            }
+            else
+            {
+                var (measure, d) = MatrixBuilder.GlobalForSimilarityRNA(u, w, matrix);
+                var optimalGlobalAlignment = GlobalAlignment.OptimalWithSimilarity(d, u, w);
+                Console.WriteLine("\nGlobal");
+                Console.WriteLine(measure);
+                Console.WriteLine(optimalGlobalAlignment.uResult + " " + optimalGlobalAlignment.wResult);
+            }
         }
 
         public static void StandardMode(string measureType, string[] lines)

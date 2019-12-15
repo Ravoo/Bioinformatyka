@@ -6,6 +6,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Update="RNADistMatrix.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="SimMatrix.txt">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
