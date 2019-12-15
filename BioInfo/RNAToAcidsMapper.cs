@@ -26,9 +26,17 @@ namespace BioInfo
 
             foreach (var acid in acids)
             {
-                var matchingCodons = AcidToRNA[acid.ToString()];
-                var matchedThree = threes.First(matchingCodons.Contains);
-                threes.Remove(matchedThree);
+                if (acid == '-')
+                {
+                    rnaNew.Append("---");
+                }
+                else
+                {
+                    var matchingCodons = AcidToRNA[acid.ToString()];
+                    var matchedThree = threes.First(matchingCodons.Contains);
+                    threes.Remove(matchedThree);
+                    rnaNew.Append(matchedThree);
+                }
             }
 
             return rnaNew.ToString();

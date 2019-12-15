@@ -15,7 +15,7 @@ namespace BioInfo
         {
             var uResult = string.Empty;
             var wResult = string.Empty;
-
+            
             for (var i = doubles.GetLength(0) - 1; i >= 0;)
             {
                 for (var j = doubles.GetLength(1) - 1; j >= 0;)
@@ -55,54 +55,53 @@ namespace BioInfo
                     {
                         if (n1 <= n2 && n1 <= n3)
                         {
-                            i -= 1;
-                            j -= 1;
+                            //TODO zmiana
                             if (i > 0)
                                 wResult += w[i - 1];
                             if (j > 0)
                                 uResult += u[j - 1];
-
+                            i -= 1;
+                            j -= 1;
                         }
                         else if (n2 <= n1 && n2 <= n3)
                         {
-                            j -= 1;
-                            if (i > 0)
+                            if (j > 0)
                                 uResult += u[j - 1];
                             wResult += '-';
+                            j -= 1;
                         }
                         else
                         {
-                            i--;
-                            if (j > 0)
+                            if (i > 0)
                                 wResult += w[i - 1];
                             uResult += '-';
+                            i--;
                         }
                     }
                     else
                     {
                         if (n1 >= n2 && n1 >= n3)
                         {
-                            i -= 1;
-                            j -= 1;
                             if (i > 0)
                                 wResult += w[i - 1];
                             if (j > 0)
                                 uResult += u[j - 1];
-
+                            i -= 1;
+                            j -= 1;
                         }
                         else if (n2 >= n1 && n2 >= n3)
                         {
-                            j -= 1;
-                            if (i > 0)
+                            if (j > 0)
                                 uResult += u[j - 1];
                             wResult += '-';
+                            j -= 1;
                         }
                         else
                         {
-                            i--;
-                            if (j > 0)
+                            if (i > 0)
                                 wResult += w[i - 1];
                             uResult += '-';
+                            i--;
                         }
                     }
                 }
@@ -111,7 +110,7 @@ namespace BioInfo
             for (var i = 0; i < w.Length + 1; i++)
             {
                 for (var j = 0; j < u.Length + 1; j++) 
-                    Console.Write(doubles[i, j]);
+                    Console.Write($"{doubles[i, j]},");
                 Console.WriteLine();
             }
 

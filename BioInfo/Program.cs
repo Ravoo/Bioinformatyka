@@ -8,7 +8,7 @@ namespace BioInfo
     {
         static void Main(string[] args)
         {
-            var lines = File.ReadAllLines("RNADistMatrix.txt", Encoding.UTF8);
+            var lines = File.ReadAllLines("RNASimMatrix.txt", Encoding.UTF8);
             var measureType = lines[0];
 
             if (measureType == "rd" || measureType == "rs")
@@ -45,21 +45,37 @@ namespace BioInfo
                 var optimalGlobalAlignment = GlobalAlignment.OptimalWithDistance(d, u, w);
                 var newRnaU = RNAToAcidsMapper.GetRNA(optimalGlobalAlignment.uResult, uRNA);
                 var newRnaW = RNAToAcidsMapper.GetRNA(optimalGlobalAlignment.wResult, wRNA);
-                Console.WriteLine("\nGlobal");
-                Console.WriteLine(measure);
-                Console.WriteLine(optimalGlobalAlignment.uResult + " " + optimalGlobalAlignment.wResult);
-                Console.WriteLine(newRnaU + " " + newRnaW);
+                
+                PrintResult("Global", "Distance", uRNA, newRnaU, wRNA, newRnaW,measure);
+                PrintResult("Global", "Distance", u, optimalGlobalAlignment.uResult, w, optimalGlobalAlignment.wResult,measure);
             }
             else
             {
                 var (measure, d) = MatrixBuilder.GlobalForSimilarityRNA(u, w, matrix);
                 var optimalGlobalAlignment = GlobalAlignment.OptimalWithSimilarity(d, u, w);
-                Console.WriteLine("\nGlobal");
-                Console.WriteLine(measure);
-                Console.WriteLine(optimalGlobalAlignment.uResult + " " + optimalGlobalAlignment.wResult);
+                var newRnaU = RNAToAcidsMapper.GetRNA(optimalGlobalAlignment.uResult, uRNA);
+                var newRnaW = RNAToAcidsMapper.GetRNA(optimalGlobalAlignment.wResult, wRNA);
+                PrintResult("Global", "Similarity", uRNA, newRnaU, wRNA, newRnaW,measure);
+                PrintResult("Global", "Similarity", u, optimalGlobalAlignment.uResult, w, optimalGlobalAlignment.wResult,measure);
+                
+                var (measureLocal, dLocal) = MatrixBuilder.LocalSimilarityRNA(u, w, matrix);
+                var (uResult, wResult) = LocalAlignment.MaximalLocal(dLocal, u, w);
+                var localRnaU = RNAToAcidsMapper.GetRNA(uResult, uRNA);
+                var localRnaW = RNAToAcidsMapper.GetRNA(wResult, wRNA);
+                
+                PrintResult("Local", "Similarity", uRNA, localRnaU, wRNA, localRnaW,measureLocal);
             }
         }
 
+
+        public static void PrintResult(string alignmentType,string measureType, string u, string uResult, string w, string wResult, double measure)
+        {
+            Console.WriteLine();
+            Console.WriteLine(alignmentType);
+            Console.WriteLine($"{measureType}: {measure}");
+            Console.WriteLine($"u: {u} \nw: {w} \nuResult: {uResult} {uResult.Length} \nwResult: {wResult} {wResult.Length}");
+        }
+        
         public static void StandardMode(string measureType, string[] lines)
         {
             var u = lines[1];
@@ -71,28 +87,28 @@ namespace BioInfo
                 for (var j = 0; j < 5; j++)
                     matrix[i - 3, j] = double.Parse(line[j]);
             }
+            
 
-
-            var (measure, d) = measureType == "d"
-                ? MatrixBuilder.GlobalForDistance(u, w, matrix)
-                : MatrixBuilder.GlobalForSimilarity(u, w, matrix);
-
-            var optimalGlobalAlignment = measureType == "d"
-                ? GlobalAlignment.OptimalWithDistance(d, u, w)
-                : GlobalAlignment.OptimalWithSimilarity(d, u, w);
-
-            Console.WriteLine("\nGlobal");
-            Console.WriteLine(measure);
-            Console.WriteLine(optimalGlobalAlignment.uResult + " " + optimalGlobalAlignment.wResult);
+            if (measureType == "d")
+            {
+                var (measure, d) = MatrixBuilder.GlobalForDistance(u, w, matrix);
+                var optimalGlobalAlignment = GlobalAlignment.OptimalWithDistance(d, u, w);
+                PrintResult("Global", "Distance", u, optimalGlobalAlignment.uResult, w, optimalGlobalAlignment.wResult,
+                    measure);
+            }
+            else
+            {
+                var (measure, d) = MatrixBuilder.GlobalForSimilarity(u, w, matrix);
+                var optimalGlobalAlignment =GlobalAlignment.OptimalWithSimilarity(d, u, w);
+                PrintResult("Global", "Similarity", u, optimalGlobalAlignment.uResult, w, optimalGlobalAlignment.wResult,
+                    measure);
+            }
 
             if (measureType == "s")
             {
-                Console.WriteLine("\nLocal");
-
-                var (measureLocal, dLocal) = MatrixBuilder.Local(u, w, matrix);
+                var (measureLocal, dLocal) = MatrixBuilder.LocalSimilarity(u, w, matrix);
                 var (uResult, wResult) = LocalAlignment.MaximalLocal(dLocal, u, w);
-                Console.WriteLine(measureLocal);
-                Console.WriteLine(uResult + " " + wResult);
+                PrintResult("Local", "Similarity", u, uResult, w, wResult,measureLocal);
             }
         }
     }

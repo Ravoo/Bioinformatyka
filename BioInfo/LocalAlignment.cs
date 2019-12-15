@@ -28,8 +28,8 @@ namespace BioInfo
                 {
                     for (var j = max_j; j >= 0;)
                     {
-                        if (doubles[i, j] == 0)
-                            Console.WriteLine($"Starting from max val at position [{max_i},{max_j}] got to point when doubles[{i},{j}] is 0.");
+//                        if (doubles[i, j] == 0)
+//                            Console.WriteLine($"Starting from max val at position [{max_i},{max_j}] got to point when doubles[{i},{j}] is 0.");
 
                         var n1 = double.MinValue;
                         var n2 = double.MinValue;
@@ -58,27 +58,26 @@ namespace BioInfo
 
                         if (n1 >= n2 && n1 >= n3)
                         {
-                            i -= 1;
-                            j -= 1;
                             if (i > 0)
                                 wResult += w[i - 1];
                             if (j > 0)
                                 uResult += u[j - 1];
-
+                            i -= 1;
+                            j -= 1;
                         }
                         else if (n2 >= n1 && n2 >= n3)
                         {
-                            j -= 1;
-                            if (i > 0)
+                            if (j > 0)
                                 uResult += u[j - 1];
                             wResult += '-';
+                            j -= 1;
                         }
                         else
                         {
-                            i--;
-                            if (j > 0)
+                            if (i > 0)
                                 wResult += w[i - 1];
                             uResult += '-';
+                            i--;
                         }
                     }
                 }

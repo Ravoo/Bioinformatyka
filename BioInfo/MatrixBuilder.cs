@@ -15,6 +15,11 @@ namespace BioInfo
 
         public static (double result, double[,] d) GlobalForSimilarityRNA(string u, string w, double[,] matrix)
             => CalculateMeasure(u, w, matrix, Math.Max, GetValueForAcids);
+        
+        public static (double result, double[,] d) LocalSimilarityRNA(string u, string w, double[,] matrix)
+            => Local(u, w, matrix, GetValueForAcids);
+        public static (double result, double[,] d) LocalSimilarity(string u, string w, double[,] matrix)
+            => Local(u, w, matrix, GetValue);
 
         private static (double result, double[,] d) CalculateMeasure(string u, string w, double[,] matrix, 
             Func<double, double, double> optimizationFunction, Func<double[,], char, char, double> getValue)
@@ -56,7 +61,7 @@ namespace BioInfo
             return (d[n, m], d);
         }
 
-        public static (double result, double[,] d) Local(string u, string w, double[,] matrix)
+        public static (double result, double[,] d) Local(string u, string w, double[,] matrix, Func<double[,], char, char, double> getValue)
         {
             int m, n;
             double[,] d;
@@ -73,9 +78,9 @@ namespace BioInfo
             for (var i = 1; i <= n; i++)
                 for (var j = 1; j <= m; j++)
                 {
-                    var case1 = d[i - 1, j - 1] + GetValue(matrix, u[j - 1], w[i - 1]);
-                    var case2 = d[i, j - 1] + GetValue(matrix, u[j - 1], '-');
-                    var case3 = d[i - 1, j] + GetValue(matrix, '-', w[i - 1]);
+                    var case1 = d[i - 1, j - 1] + getValue(matrix, u[j - 1], w[i - 1]);
+                    var case2 = d[i, j - 1] + getValue(matrix, u[j - 1], '-');
+                    var case3 = d[i - 1, j] + getValue(matrix, '-', w[i - 1]);
                     const int case4 = 0;
 
                     d[i, j] = Math.Max(Math.Max(case1, case4), Math.Max(case2, case3));
