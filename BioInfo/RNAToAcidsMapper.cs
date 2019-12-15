@@ -1,9 +1,38 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace BioInfo
 {
     public class RNAToAcidsMapper
     {
+        public static string GetAcids(string rna)
+        {
+            var threes = ChunkIntoThrees(rna);
+            var acids = new StringBuilder();
+            foreach (var three in threes)
+            {
+                var acid = RNAToAcids[three];
+                acids.Append(acid);
+            }
+
+            return acids.ToString();
+        }
+
+        public static string GetRNA(string acids)
+        {
+            var rna = new StringBuilder();
+
+            foreach (var acid in acids) 
+                rna.Append(AcidToRNA[acid.ToString()]);
+
+            return rna.ToString();
+        }
+
+        private static IEnumerable<string> ChunkIntoThrees(string rna) =>
+            Enumerable.Range(0, rna.Length / 3)
+                .Select(i => rna.Substring(i * 3, 3));
+
         public static Dictionary<string, string> RNAToAcids = new Dictionary<string, string>
         {
             {"UUU", "F"},
@@ -16,11 +45,11 @@ namespace BioInfo
             {"UCG", "S"},
             {"UAU", "Y"},
             {"UAC", "Y"}, 
-            {"UAA", "STOP"}, // zamienic na pustego stringa?
-            {"UAG", "STOP"},
+            {"UAA", ""}, // zamienic na pustego stringa?
+            {"UAG", ""},
             {"UGU", "C"},
             {"UGC", "C"},
-            {"UGA", "STOP"},
+            {"UGA", ""},
             {"UGG", "W"},
             {"CUU", "L"},
             {"CUC", "L"},
@@ -130,3 +159,4 @@ namespace BioInfo
         };
     }
 }
+

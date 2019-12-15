@@ -8,17 +8,44 @@ namespace BioInfo
     {
         static void Main(string[] args)
         {
-            var matrix = new double[5, 5];
-
             var lines = File.ReadAllLines("SimMatrix.txt", Encoding.UTF8);
-
             var measureType = lines[0];
-            var u = lines[1];
-            var w = lines[2];
+
+            if (measureType == "r")
+                RNAMode(lines);
+            else
+                StandardMode(measureType, lines);
+        }
+
+        public static void RNAMode(string[] lines)
+        {
+            var uRNA = lines[1];
+            var wRNA = lines[2];
+            // rzucic wyjatek jesli nie sa podzielne przez 3?
+            var matrix = new double[21, 21];
+
             for (var i = 3; i < lines.Length; i++)
             {
                 var line = lines[i].Split(',');
-                for (var j = 0; j < 5; j++) 
+                for (var j = 0; j < 5; j++)
+                    matrix[i - 3, j] = double.Parse(line[j]);
+            }
+
+            var u = RNAToAcidsMapper.GetAcids(uRNA);
+            var w = RNAToAcidsMapper.GetAcids(wRNA);
+
+
+        }
+
+        public static void StandardMode(string measureType, string[] lines)
+        {
+            var u = lines[1];
+            var w = lines[2];
+            var matrix = new double[5, 5];
+            for (var i = 3; i < lines.Length; i++)
+            {
+                var line = lines[i].Split(',');
+                for (var j = 0; j < 5; j++)
                     matrix[i - 3, j] = double.Parse(line[j]);
             }
 
