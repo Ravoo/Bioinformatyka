@@ -8,7 +8,7 @@ namespace BioInfo
     {
         static void Main(string[] args)
         {
-            var lines = File.ReadAllLines("RNASimMatrix.txt", Encoding.UTF8);
+            var lines = File.ReadAllLines("DistMatrix.txt", Encoding.UTF8);
             var measureType = lines[0];
 
             if (measureType == "rd" || measureType == "rs")
@@ -48,6 +48,11 @@ namespace BioInfo
                 
                 PrintResult("Global", "Distance", uRNA, newRnaU, wRNA, newRnaW,measure);
                 PrintResult("Global", "Distance", u, optimalGlobalAlignment.uResult, w, optimalGlobalAlignment.wResult,measure);
+
+                var similarityMatrix = ConvertDistanceToSimilarity(matrix);
+                var (measureLocal, dLocal) = MatrixBuilder.LocalSimilarity(u, w, similarityMatrix);
+                var (uResult, wResult) = LocalAlignment.MaximalLocal(dLocal, u, w);
+                PrintResult("Local", "Distance", u, uResult, w, wResult, measureLocal);
             }
             else
             {
@@ -95,6 +100,12 @@ namespace BioInfo
                 var optimalGlobalAlignment = GlobalAlignment.OptimalWithDistance(d, u, w);
                 PrintResult("Global", "Distance", u, optimalGlobalAlignment.uResult, w, optimalGlobalAlignment.wResult,
                     measure);
+
+                var similarityMatrix = ConvertDistanceToSimilarity(matrix);
+                //PrintMatrix(similarityMatrix);
+                var (measureLocal, dLocal) = MatrixBuilder.LocalSimilarity(u, w, similarityMatrix);
+                var (uResult, wResult) = LocalAlignment.MaximalLocal(dLocal, u, w);
+                PrintResult("Local", "Distance", u, uResult, w, wResult, measureLocal);
             }
             else
             {
@@ -102,13 +113,31 @@ namespace BioInfo
                 var optimalGlobalAlignment =GlobalAlignment.OptimalWithSimilarity(d, u, w);
                 PrintResult("Global", "Similarity", u, optimalGlobalAlignment.uResult, w, optimalGlobalAlignment.wResult,
                     measure);
-            }
 
-            if (measureType == "s")
-            {
                 var (measureLocal, dLocal) = MatrixBuilder.LocalSimilarity(u, w, matrix);
                 var (uResult, wResult) = LocalAlignment.MaximalLocal(dLocal, u, w);
-                PrintResult("Local", "Similarity", u, uResult, w, wResult,measureLocal);
+                PrintResult("Local", "Similarity", u, uResult, w, wResult, measureLocal);
+            } 
+        }
+
+        static double[,] ConvertDistanceToSimilarity(double[,] distanceMatrix)
+        {
+            var similarityMatrix = new double[distanceMatrix.GetLength(0), distanceMatrix.GetLength(1)];
+            for (var i = 0; i < distanceMatrix.GetLength(0); i++)
+            for (var j = 0; j < distanceMatrix.GetLength(1); j++)
+                similarityMatrix[i, j] = 1 / (1 + distanceMatrix[i, j]);
+
+            return similarityMatrix;
+        }
+
+        static void PrintMatrix(double[,] matrix)
+        {
+            Console.WriteLine("Converted Matrix");
+            for (var i = 0; i < matrix.GetLength(0); i++)
+            {
+                for (var j = 0; j < matrix.GetLength(1); j++)
+                    Console.Write($"{matrix[i, j]},");
+                Console.WriteLine();
             }
         }
     }
